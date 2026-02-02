@@ -1,4 +1,4 @@
-FROM python:3.14-slim
+FROM python:3.12-slim
 
 WORKDIR /app
 
@@ -11,7 +11,12 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 
 # Install Python dependencies
-# Increase timeout for slow installs (like torch)
+# 1. Install PyTorch CPU first (to avoid downloading the huge GPU version)
+# We use python 3.11 because ML wheels are often not available for the newest python versions immediately
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
+
+# 2. Install remaining dependencies
+# Increase timeout for slow installs
 RUN pip install --no-cache-dir --timeout=1000 -r requirements.txt
 
 # Create directories for models and logs
