@@ -25,6 +25,24 @@ except ImportError:
     logger.warning("sb3-contrib not installed. DQN agents will not be available.")
 
 
+def get_device():
+    """
+    Get the best available device for PyTorch.
+    Priority: MPS (Apple Silicon) > CUDA (NVIDIA) > CPU
+    """
+    if torch.backends.mps.is_available():
+        device = torch.device("mps")
+        logger.info("Using MPS (Apple Silicon GPU)")
+    elif torch.cuda.is_available():
+        device = torch.device("cuda")
+        logger.info(f"Using CUDA (GPU: {torch.cuda.get_device_name(0)})")
+    else:
+        device = torch.device("cpu")
+        logger.info("Using CPU")
+
+    return device
+
+
 class DQNTrainingCallback(BaseCallback):
     """Custom callback for DQN training progress."""
 
@@ -137,7 +155,7 @@ class DQNTrainingCallback(BaseCallback):
 
                 # Get return from environment
                 if hasattr(self.eval_env, "envs") and hasattr(
-                    self.eval_env.envs[0], "get_episode_statistics"
+                        self.eval_env.envs[0], "get_episode_statistics"
                 ):
                     stats = self.eval_env.envs[0].get_episode_statistics()
                     episode_returns.append(stats.get("total_return", 0))
@@ -187,7 +205,9 @@ class RainbowDQNAgent:
         self.config = config or self._get_default_config()
         self.model = None
         self.vec_env = None
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        # Auto-detect best device (MPS > CUDA > CPU)
+        self.device = get_device()
 
         self.model_dir = self.config.get("model_dir", "./models")
         self.log_dir = self.config.get("log_dir", "./logs")
@@ -361,7 +381,9 @@ class IQNAgent:
         self.config = config or self._get_default_config()
         self.model = None
         self.vec_env = None
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        # Auto-detect best device (MPS > CUDA > CPU)
+        self.device = get_device()
 
         self.model_dir = self.config.get("model_dir", "./models")
         self.log_dir = self.config.get("log_dir", "./logs")

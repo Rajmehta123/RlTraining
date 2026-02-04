@@ -22,6 +22,24 @@ from torch import nn
 
 logger = logging.getLogger(__name__)
 
+def get_device():
+    """
+    Get the best available device for PyTorch.
+    Priority: MPS (Apple Silicon) > CUDA (NVIDIA) > CPU
+    """
+    if torch.backends.mps.is_available():
+        device = torch.device("mps")
+        logger.info("Using MPS (Apple Silicon GPU)")
+    elif torch.cuda.is_available():
+        device = torch.device("cuda")
+        logger.info(f"Using CUDA (GPU: {torch.cuda.get_device_name(0)})")
+    else:
+        device = torch.device("cpu")
+        logger.info("Using CPU")
+
+    return device
+
+
 
 class AttentionLayer(nn.Module):
     """Multi-head self-attention layer."""
@@ -354,7 +372,7 @@ class RLTradingAgent:
         self.config = config or self._get_default_config()
         self.model = None
         self.vec_env = None
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = get_device
 
         self.model_dir = self.config.get("model_dir", "./models")
         self.log_dir = self.config.get("log_dir", "./logs")
