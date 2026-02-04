@@ -13,7 +13,7 @@ COPY requirements.txt .
 # Install Python dependencies
 # 1. Install PyTorch CPU first (to avoid downloading the huge GPU version)
 # We use python 3.11 because ML wheels are often not available for the newest python versions immediately
-RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir torch
 
 # 2. Install remaining dependencies
 # Increase timeout for slow installs
