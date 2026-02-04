@@ -75,7 +75,7 @@ class DataHandler:
         url = f"{self.FMP_BASE_URL}{endpoint}?{query_string}"
 
         # Mask API key for logging
-        masked_url = url.replace(self.fmp_api_key, "***")
+        # masked_url = url.replace(self.fmp_api_key, "***")
 
         try:
             response = requests.get(url, timeout=15)
@@ -176,7 +176,7 @@ class DataHandler:
 
             # Get key metrics (quarterly, last 8 quarters)
             metrics_data = self._make_fmp_request(
-                "/key-metrics", {"period": "quarter", "limit": "8"}
+                "/key-metrics", {"period": "annual", "limit": "2"}
             )
             if metrics_data:
                 self.fundamentals["key_metrics"] = metrics_data

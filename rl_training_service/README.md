@@ -10,10 +10,33 @@ A production-ready reinforcement learning service for training autonomous stock 
 # Install dependencies
 pip install -r requirements.txt
 
-# Set environment variables
-export FMP_API_KEY="your_fmp_api_key"
-export SUPABASE_URL="your_supabase_url"
-export SUPABASE_KEY="your_supabase_key"
+# Set up environment variables
+cp .env.example .env
+# Edit .env and add your FMP API key
+```
+
+### Getting Your FMP API Key
+
+1. Go to [Financial Modeling Prep](https://site.financialmodelingprep.com/developer/docs)
+2. Sign up for a free account
+3. Copy your API key from the dashboard
+4. Add it to your `.env` file:
+   ```
+   VITE_FMP_API_KEY=your_actual_api_key_here
+   ```
+
+**Note:** The free tier provides:
+- 250 API calls per day
+- Access to stock prices, fundamentals, financial statements
+- Sufficient for training multiple models
+
+### Alternative: Environment Variables
+
+```bash
+# Set environment variables (alternative to .env file)
+export VITE_FMP_API_KEY="your_fmp_api_key"
+export VITE_SUPABASE_URL="your_supabase_url"
+export VITE_SUPABASE_ANON_KEY="your_supabase_key"
 ```
 
 ### Running the Service

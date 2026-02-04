@@ -207,7 +207,7 @@ class RainbowDQNAgent:
         self.vec_env = None
 
         # Auto-detect best device (MPS > CUDA > CPU)
-        self.device = get_device()
+        self.device = torch.device("cpu")
 
         self.model_dir = self.config.get("model_dir", "./models")
         self.log_dir = self.config.get("log_dir", "./logs")
@@ -383,7 +383,7 @@ class IQNAgent:
         self.vec_env = None
 
         # Auto-detect best device (MPS > CUDA > CPU)
-        self.device = get_device()
+        self.device = torch.device("cpu")
 
         self.model_dir = self.config.get("model_dir", "./models")
         self.log_dir = self.config.get("log_dir", "./logs")
